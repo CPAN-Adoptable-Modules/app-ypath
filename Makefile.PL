@@ -1,23 +1,26 @@
-#!perl
 use v5.14;
 use utf8;
 
+package App::ypath;
 use strict;
 use warnings;
 
-my $module    = 'App::ypath';
+use File::Spec::Functions qw(catfile);
+
+my $module    = __PACKAGE__;
 my $github    = 'https://github.com/briandfoy/ypath';
 my $main_file = catfile( 'lib', split /::/, "$module.pm" );
 
 my %WriteMakefile = (
-	'NAME'	        => 'App::ypath',
+	'NAME'	        => $module,
 	'ABSTRACT_FROM' => $main_file,
 	'VERSION_FROM'  => $main_file,
 	'LICENSE'       => 'perl',
 	'AUTHOR'        => 'brian d foy <bdfoy@cpan.org>',
 
 	'CONFIGURE_REQUIRES' => {
-		'ExtUtils::MakeMaker' => '6.64',
+		'ExtUtils::MakeMaker'   => '6.64',
+		'File::Spec::Functions' => '0',
 		},
 
 	'BUILD_REQUIRES' => {
