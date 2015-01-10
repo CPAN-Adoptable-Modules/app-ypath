@@ -8,7 +8,6 @@ use warnings;
 use File::Spec::Functions qw(catfile);
 
 my $module    = __PACKAGE__;
-my $module    = 'App::ypath';
 ( my $dist = $module ) =~ s/::/-/g;
 
 my $github    = 'https://github.com/briandfoy/ypath';
@@ -51,7 +50,7 @@ my %WriteMakefile = (
 			},
 		},
 
-	clean  => { FILES => q|-*| },
+	clean  => { FILES => qq|$dist-*| },
 	);
 
 sub arguments { \%WriteMakefile }
