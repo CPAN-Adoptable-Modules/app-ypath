@@ -9,6 +9,8 @@ use File::Spec::Functions qw(catfile);
 
 my $module    = __PACKAGE__;
 my $module    = 'App::ypath';
+( my $dist = $module ) =~ s/::/-/g;
+
 my $github    = 'https://github.com/briandfoy/ypath';
 my $main_file = catfile( 'lib', split /::/, "$module.pm" );
 
