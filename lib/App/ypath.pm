@@ -4,6 +4,8 @@ use 5.010;
 use strict;
 use warnings;
 
+our $VERSION = '0.011';
+
 =head1 NAME
 
 extract_yaml_value - Find distributions to index
