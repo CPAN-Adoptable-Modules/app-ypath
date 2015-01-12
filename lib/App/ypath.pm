@@ -8,7 +8,7 @@ our $VERSION = '0.011';
 
 =head1 NAME
 
-extract_yaml_value - Find distributions to index
+App::ypath - Extract information from YAML
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ collations.
 
 This code is in Github:
 
-	git://github.com/briandfoy/mycpan-indexer.git
+	https://github.com/briandfoy/app-ypath
 
 =head1 AUTHOR
 
