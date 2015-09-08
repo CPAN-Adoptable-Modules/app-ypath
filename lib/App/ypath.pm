@@ -6,6 +6,8 @@ use warnings;
 
 our $VERSION = '0.011';
 
+=encoding utf8
+
 =head1 NAME
 
 App::ypath - Extract information from YAML
@@ -14,7 +16,7 @@ App::ypath - Extract information from YAML
 
 	# separate keys by /
 	% extract_yaml_info dist_info/dist_file directory_of_yaml_files
-	
+
 	# separate multiple values with commas
 	% extract_yaml_info dist_info/dist_file,run_info/alarm_error directory_of_yaml_files
 
@@ -30,7 +32,7 @@ App::ypath - Extract information from YAML
 =head1 DESCRIPTION
 
 This is a simple script to extract values from a list of YAML files. It's
-meant for simple and quick inspections rather than full-on queries and 
+meant for simple and quick inspections rather than full-on queries and
 collations.
 
 =head1 TO DO
@@ -69,8 +71,8 @@ getopt('dk', \my %opts);
 $SIG{__WARN__} = sub { 1 } unless $opts{w};
 
 my ($value, @dirs ) = @ARGV;
-my @paths = map 
-	{ [ split m|/| ] } 
+my @paths = map
+	{ [ split m|/| ] }
 	split /,/, $value;
 
 my $count;
@@ -78,11 +80,11 @@ my $count;
 foreach my $dir ( @dirs )
 	{
 	opendir my $dh, $dir or warn "Could not open $dir: $!\n";
-	
+
 	FILE: while( my $file = readdir( $dh ) )
 		{
 		next if $file =~ /^\./;
-		
+
 		my $yaml = eval { LoadFile( catfile( $dir, $file ) ) };
 		unless( defined $yaml )
 			{
@@ -105,21 +107,21 @@ foreach my $dir ( @dirs )
 					elsif( $key > $#$ref )
 						{
 						warn "Array out of bounds at $key!\n";
-						next PATH;						
+						next PATH;
 						}
-					
+
 					$ref = $ref->[$key];
 					}
 				elsif( reftype $ref eq reftype {} )
 					{
 					unless( exists $ref->{$key} )
 						{
-						warn "\tPath to ", 
+						warn "\tPath to ",
 							join( '->', @$path ),
 							" does not exist (misses at $key)\n";
 						next PATH;
 						}
-						
+
 					$ref = $ref->{$key};
 					}
 				else
@@ -128,7 +130,7 @@ foreach my $dir ( @dirs )
 					next PATH;
 					}
 				}
-			
+
 			if( ref $ref )
 				{
 				$ref = Dumper( $ref );
