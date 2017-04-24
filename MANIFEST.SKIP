@@ -58,5 +58,7 @@
 #!end included /usr/local/perls/perl-5.20.0/lib/5.20.0/ExtUtils/MANIFEST.SKIP
 
 
-.releaserc
-.travis.yml
+\.travis\.yml
+\.?appveyor.yml
+\.releaserc
+\.lwpcookies
