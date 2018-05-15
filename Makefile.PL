@@ -65,6 +65,7 @@ my %WriteMakefile = (
 		},
 
 	'PREREQ_PM'     => {
+		'YAML' => '0',
 		},
 
 	'META_MERGE' => {
