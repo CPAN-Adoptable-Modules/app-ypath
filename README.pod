@@ -2,6 +2,16 @@
 
 =encoding utf8
 
+=for HTML <a href="https://travis-ci.org/briandfoy/app-ypath"><img src="https://travis-ci.org/briandfoy/app-ypath.svg?branch=master" /></a>
+
+=for HTML <a href='https://ci.appveyor.com/project/briandfoy/app-ypath'><img src='https://ci.appveyor.com/api/projects/status/jy3arh5mnm5w9g8i' /></a>
+
+=for HTML <a href='https://coveralls.io/github/briandfoy/app-ypath?branch=master'><img src='https://coveralls.io/repos/github/briandfoy/app-ypath/badge.svg?branch=master' alt='Coverage Status' /></a>
+
+=for HTML <a href="https://github.com/briandfoy/app-ypath/blob/master/LICENSE"><img src="https://img.shields.io/cpan/l/App-ypath.svg" /></a>
+
+=for HTML <a href="http://www.metacpan.org/module/App::ypath"><img src="https://img.shields.io/cpan/v/App-ypath.svg" /></A>
+
 =head1 The App::ypath module
 
 This is the I<README> for the L<App::ypath> Perl module. You're probably 
