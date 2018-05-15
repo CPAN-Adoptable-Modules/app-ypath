@@ -1,2 +1,6 @@
 Revision history for Perl module ypath
 
+0.012 2018-05-15T15:07:34Z
+	* Add a simple test to the distribution
+	* Clarify that it's the Artistic License 2.0
+
