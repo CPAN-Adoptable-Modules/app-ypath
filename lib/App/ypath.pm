@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 
 =encoding utf8
 
@@ -55,9 +55,9 @@ brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2010-2015, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2010-2018, brian d foy <bdfoy@cpan.org>. All rights reserved.
 
-You may redistribute this under the same terms as Perl itself.
+You may redistribute this under the terms of the Artistic License 2.0.
 
 =cut
 
@@ -77,17 +77,14 @@ my @paths = map
 
 my $count;
 
-foreach my $dir ( @dirs )
-	{
+foreach my $dir ( @dirs ) {
 	opendir my $dh, $dir or warn "Could not open $dir: $!\n";
 
-	FILE: while( my $file = readdir( $dh ) )
-		{
+	FILE: while( my $file = readdir( $dh ) ) {
 		next if $file =~ /^\./;
 
 		my $yaml = eval { LoadFile( catfile( $dir, $file ) ) };
-		unless( defined $yaml )
-			{
+		unless( defined $yaml ) {
 			warn "$file did not parse correctly\n";
 			next FILE;
 			}
@@ -95,27 +92,21 @@ foreach my $dir ( @dirs )
 		PATH: foreach my $path ( @paths ) {
 			my $ref = $yaml;
 
-			KEY: foreach my $key ( @$path )
-				{
-				if( reftype $ref eq reftype [] )
-					{
-					if( $key !~ m/-?\d+/ )
-						{
+			KEY: foreach my $key ( @$path ) {
+				if( reftype $ref eq reftype [] ) {
+					if( $key !~ m/-?\d+/ ) {
 						warn "Bad array value at $key!\n";
 						next PATH;
 						}
-					elsif( $key > $#$ref )
-						{
+					elsif( $key > $#$ref ) {
 						warn "Array out of bounds at $key!\n";
 						next PATH;
 						}
 
 					$ref = $ref->[$key];
 					}
-				elsif( reftype $ref eq reftype {} )
-					{
-					unless( exists $ref->{$key} )
-						{
+				elsif( reftype $ref eq reftype {} ) {
+					unless( exists $ref->{$key} ) {
 						warn "\tPath to ",
 							join( '->', @$path ),
 							" does not exist (misses at $key)\n";
@@ -124,15 +115,13 @@ foreach my $dir ( @dirs )
 
 					$ref = $ref->{$key};
 					}
-				else
-					{
+				else {
 					warn "End of the road before $key!";
 					next PATH;
 					}
 				}
 
-			if( ref $ref )
-				{
+			if( ref $ref ) {
 				$ref = Dumper( $ref );
 				$ref =~ s/\A\$VAR.*=\s*//;
 				}
