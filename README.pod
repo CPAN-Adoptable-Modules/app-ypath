@@ -2,17 +2,10 @@
 
 =encoding utf8
 
-=for HTML <a href="https://travis-ci.org/briandfoy/app-ypath"><img src="https://travis-ci.org/briandfoy/app-ypath.svg?branch=master" /></a>
-
-=for HTML <a href='https://ci.appveyor.com/project/briandfoy/app-ypath'><img src='https://ci.appveyor.com/api/projects/status/jy3arh5mnm5w9g8i' /></a>
-
-=for HTML <a href='https://coveralls.io/github/briandfoy/app-ypath?branch=master'><img src='https://coveralls.io/repos/github/briandfoy/app-ypath/badge.svg?branch=master' alt='Coverage Status' /></a>
-
-=for HTML <a href="https://github.com/briandfoy/app-ypath/blob/master/LICENSE"><img src="https://img.shields.io/cpan/l/App-ypath.svg" /></a>
-
-=for HTML <a href="https://metacpan.org/pod/App::ypath"><img src="https://img.shields.io/cpan/v/App-ypath.svg" /></A>
-
 =head1 The App::ypath module
+
+THIS IS AN ABANDONED PROJECT. I RECOMMEND https://pypi.org/project/yq/
+INSTEAD.
 
 This is the I<README> for the L<App::ypath> Perl module. You're probably
 looking at this because you don't know where else to find what you're
