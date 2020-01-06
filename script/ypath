@@ -1,0 +1,31 @@
+#!perl
+use v5.26;
+use open qw(:std :utf8);
+
+use feature qw(signatures);
+no warnings qw(experimental::signatures);
+
+use App::ypath;
+use Mojo::JSON qw(encode_json);
+use Mojo::Util qw(dumper);
+
+
+my $callback = sub ( $hash ) {
+	say dumper( $hash ) if $ENV{YPATH_DEBUG};
+
+	if( ref $hash->{result} ) {
+		my $octets = encode_json( $hash->{result} );
+		open my $fh, '<:utf8', \ $octets;
+		print while( <$fh> );
+		}
+	else
+		{
+		say $hash->{result}
+		}
+	};
+
+my $ypath = shift @ARGV;
+
+foreach my $file ( @ARGV ) {
+	App::ypath->run( $ypath, $file, $callback );
+	}

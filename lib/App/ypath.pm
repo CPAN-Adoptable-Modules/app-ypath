@@ -1,10 +1,13 @@
-#!perl
+package App::ypath;
 use utf8;
-use 5.010;
+use 5.026;
 use strict;
 use warnings;
 
-our $VERSION = '0.012';
+use feature qw(signatures);
+no warnings qw(experimental::signatures);
+
+our $VERSION = '0.013';
 
 =encoding utf8
 
@@ -14,26 +17,20 @@ App::ypath - Extract information from YAML
 
 =head1 SYNOPSIS
 
-	# separate keys by /
-	% extract_yaml_info dist_info/dist_file directory_of_yaml_files
-
-	# separate multiple values with commas
-	% extract_yaml_info dist_info/dist_file,run_info/alarm_error directory_of_yaml_files
-
-	# print the filename with each output line
-	% extract_yaml_info -f dist_info/dist_file directory_of_yaml_files
-
-	# print the path to each value
-	% extract_yaml_info -f -k dist_info/dist_file directory_of_yaml_files
-
-	# suppress warnings
-	% extract_yaml_info -w dist_info/dist_file directory_of_yaml_files
 
 =head1 DESCRIPTION
 
 This is a simple script to extract values from a list of YAML files. It's
 meant for simple and quick inspections rather than full-on queries and
 collations.
+
+=head2 Methods
+
+=over 4
+
+=item * run( YPATH, FILE, CALLBACK )
+
+=back
 
 =head1 TO DO
 
@@ -45,7 +42,7 @@ collations.
 
 =head1 SOURCE AVAILABILITY
 
-This code is in Github:
+This code is in GitHub:
 
 	https://github.com/briandfoy/app-ypath
 
@@ -55,85 +52,68 @@ brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2010-2018, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2010-2020, brian d foy <bdfoy@cpan.org>. All rights reserved.
 
 You may redistribute this under the terms of the Artistic License 2.0.
 
 =cut
 
-use Data::Dumper;
-use File::Spec::Functions qw( catfile );
 use Scalar::Util qw( reftype );
 use YAML qw( LoadFile );
 
-use Getopt::Std;
-getopt('dk', \my %opts);
-$SIG{__WARN__} = sub { 1 } unless $opts{w};
+sub run ( $self, $path, $file, $callback, $options = {} ) {
+	my @paths = map
+		{ [ split m|/| ] }
+		split /,/, $path;
 
-my ($value, @dirs ) = @ARGV;
-my @paths = map
-	{ [ split m|/| ] }
-	split /,/, $value;
+	my $count;
 
-my $count;
+	my $yaml = eval { LoadFile( $file ) };
+	unless( defined $yaml ) {
+		warn "$file did not parse correctly\n";
+		return;
+		}
 
-foreach my $dir ( @dirs ) {
-	opendir my $dh, $dir or warn "Could not open $dir: $!\n";
+	PATH: foreach my $path ( @paths ) {
+		my $ref = $yaml;
 
-	FILE: while( my $file = readdir( $dh ) ) {
-		next if $file =~ /^\./;
-
-		my $yaml = eval { LoadFile( catfile( $dir, $file ) ) };
-		unless( defined $yaml ) {
-			warn "$file did not parse correctly\n";
-			next FILE;
-			}
-
-		PATH: foreach my $path ( @paths ) {
-			my $ref = $yaml;
-
-			KEY: foreach my $key ( @$path ) {
-				if( reftype $ref eq reftype [] ) {
-					if( $key !~ m/-?\d+/ ) {
-						warn "Bad array value at $key!\n";
-						next PATH;
-						}
-					elsif( $key > $#$ref ) {
-						warn "Array out of bounds at $key!\n";
-						next PATH;
-						}
-
-					$ref = $ref->[$key];
-					}
-				elsif( reftype $ref eq reftype {} ) {
-					unless( exists $ref->{$key} ) {
-						warn "\tPath to ",
-							join( '->', @$path ),
-							" does not exist (misses at $key)\n";
-						next PATH;
-						}
-
-					$ref = $ref->{$key};
-					}
-				else {
-					warn "End of the road before $key!";
+		KEY: foreach my $key ( @$path ) {
+			if( reftype $ref eq reftype [] ) {
+				if( $key !~ m/-?\d+/ ) {
+					warn "Bad array value at $key!\n";
 					next PATH;
 					}
-				}
+				elsif( $key > $#$ref ) {
+					warn "Array out of bounds at $key!\n";
+					next PATH;
+					}
 
-			if( ref $ref ) {
-				$ref = Dumper( $ref );
-				$ref =~ s/\A\$VAR.*=\s*//;
+				$ref = $ref->[$key];
 				}
+			elsif( reftype $ref eq reftype {} ) {
+				unless( exists $ref->{$key} ) {
+					warn "\tPath to ",
+						join( '->', @$path ),
+						" does not exist (misses at $key)\n";
+					next PATH;
+					}
 
-			printf "%s%s%s\n",
-				( $opts{f} ? "$file: " : '' ),
-				( $opts{k} ? join( "/", @$path) . " => " : '' ),
-				$ref
-				;
+				$ref = $ref->{$key};
+				}
+			else {
+				warn "End of the road before $key!";
+				next PATH;
+				}
 			}
-		}
-	}
 
+		$callback->( {
+			file => $file,
+			path => $path,
+			result => $ref,
+			} );
+
+		}
+
+	}
 
 1;
